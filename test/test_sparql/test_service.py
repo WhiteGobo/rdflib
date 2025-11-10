@@ -26,7 +26,7 @@ def test_service():
     {
     <http://dbpedia.org/resource/John_Lilburne>
         <http://www.w3.org/2002/07/owl#sameAs> ?sameAs ;
-        <http://www.w3.org/2000/01/rdf-schema#comment> ?dbpComment .
+        <http://dbpedia.org/ontology/description> ?dbpComment .
 
     } }  } limit 2"""
     try:
@@ -53,7 +53,7 @@ def test_service_with_bind():
     {
     <http://dbpedia.org/resource/John_Lilburne>
         <http://www.w3.org/2002/07/owl#sameAs> ?sameAs ;
-        <http://www.w3.org/2000/01/rdf-schema#comment> ?dbpComment ;
+        <http://dbpedia.org/ontology/description> ?dbpComment ;
         <http://purl.org/dc/terms/subject> ?subject .
 
     } }  } limit 2"""
@@ -89,7 +89,7 @@ def test_service_with_bound_solutions():
             SELECT ?sameAs ?dbpComment ?subject WHERE {
               <http://dbpedia.org/resource/John_Lilburne>
                 <http://www.w3.org/2002/07/owl#sameAs> ?sameAs ;
-                <http://www.w3.org/2000/01/rdf-schema#comment> ?dbpComment ;
+                <http://dbpedia.org/ontology/description> ?dbpComment ;
                 <http://purl.org/dc/terms/subject> ?subject .
             }
           }
@@ -118,7 +118,7 @@ def test_service_with_values():
     {
     <http://dbpedia.org/resource/John_Lilburne>
         <http://www.w3.org/2002/07/owl#sameAs> ?sameAs ;
-        <http://www.w3.org/2000/01/rdf-schema#comment> ?dbpComment ;
+        <http://dbpedia.org/ontology/description> ?dbpComment ;
         <http://purl.org/dc/terms/subject> ?subject .
 
     } }  } limit 2"""
