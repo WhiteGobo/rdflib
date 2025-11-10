@@ -71,7 +71,25 @@ class CSVResultSerializer(ResultSerializer):
         if result.type != "SELECT":
             raise Exception("CSVSerializer can only serialize select query results")
 
-    def serialize(self, stream: IO, encoding: str = "utf-8", **kwargs) -> None:
+    def serialize(
+        self,
+        stream: IO,
+        encoding: str = "utf-8",
+        delim: Optional[str] = None,
+        header: str | bool = "present",
+        **kwargs,
+    ) -> None:
+        """Print a sparql result in a csv-format.
+
+        The Serialization follows SPARQL recommendations version 1.1
+
+        Args:
+            stream: The stream where the serialized result is inserted.
+            encoding: Encoding for the inserted bytes.
+            delim: Delimiter used between values.
+            header: Specify if header is present. Breaks sparql recommendations,
+                if not 'present'.
+        """
         # the serialiser writes bytes in the given encoding
         # in py3 csv.writer is unicode aware and writes STRINGS,
         # so we encode afterward
@@ -86,10 +104,19 @@ class CSVResultSerializer(ResultSerializer):
             byte_stream = cast(BufferedIOBase, writable_stream)
             string_stream = cast(TextIOBase, codecs.getwriter(encoding)(byte_stream))
 
+        if delim is None:
+            delim = self.delim
+
+        if isinstance(header, str):
+            header = header.lower() in ["present", "true", "1", "t", "y"]
+        else:
+            header = bool(header)
+
         out = csv.writer(string_stream, delimiter=self.delim)
 
-        vs = [self.serializeTerm(v, encoding) for v in self.result.vars]  # type: ignore[union-attr]
-        out.writerow(vs)
+        if header or True:
+            vs = [self.serializeTerm(v, encoding) for v in self.result.vars]  # type: ignore[union-attr]
+            out.writerow(vs)
         for row in self.result.bindings:
             out.writerow(
                 [self.serializeTerm(row.get(v), encoding) for v in self.result.vars]  # type: ignore[union-attr]

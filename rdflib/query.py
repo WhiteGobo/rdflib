@@ -422,5 +422,10 @@ class ResultSerializer:
         self.result = result
 
     def serialize(self, stream: IO, encoding: str = "utf-8", **kwargs: Any) -> None:
-        """return a string properly serialized"""
+        """Print a sparql result properly serialized.
+
+        Args:
+            stream: The stream where to insert the serialized Result.
+            encoding: Used encoding for the inserted data.
+        """
         pass  # abstract
