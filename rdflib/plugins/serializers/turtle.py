@@ -1,6 +1,25 @@
-"""
-Turtle RDF graph serializer for RDFLib.
-See <http://www.w3.org/TeamSubmission/turtle/> for syntax specification.
+"""Turtle RDF graph serializer for RDFLib.
+
+Implements serialization for [turtle version 1.1](https://www.w3.org/TR/turtle/).
+Additional `args` supported by [`Graph.serialize`][rdflib.graph.Graph.serialize]
+are described by
+[`TurtleSerializer.serialize`][rdflib.plugins.serializers.turtle.TurtleSerializer.serialize].
+
+Example turtle document from [w3.org](https://www.w3.org/TR/turtle/#sec-examples):
+    ```turtle
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix dc: <http://purl.org/dc/elements/1.1/> .
+    @prefix ex: <http://example.org/stuff/1.0/> .
+
+    <http://www.w3.org/TR/rdf-syntax-grammar>
+      dc:title "RDF/XML Syntax Specification (Revised)" ;
+      ex:editor [
+        ex:fullname "Dave Beckett";
+        ex:homePage <http://purl.org/net/dajobe/>
+      ] .
+    ```
+
+
 """
 
 from __future__ import annotations
@@ -253,6 +272,20 @@ class TurtleSerializer(RecursiveSerializer):
         spacious: Optional[bool] = None,
         **kwargs: Any,
     ) -> None:
+        """Serialize data from connected store as turtle and print it to stream.
+
+        Conforms to turtle version 1.1
+
+        Args:
+            stream: Print data to this stream.
+            base: Base used in turtle document. Used for relative IRIs.
+                See [w3.org](https://www.w3.org/TR/json-ld11/#base-iri)
+                for detailed description.
+                If `None` defaults to [base of store][rdflib.graph.Graph.base].
+            encoding: Encoding used for stream.
+            spacious: Add more new lines for more readable output.
+            kwargs: Ignore the rest of the arguments.
+        """
         self.reset()
         self.stream = stream
         # if base is given here, use that, if not and a base is set for the graph use that
