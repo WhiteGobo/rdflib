@@ -1,3 +1,35 @@
+"""Implements a serializer, to serialize the difference between two datasets.
+
+Additional `args` supported by [`Graph.serialize`][rdflib.graph.Graph.serialize]
+are described by
+[`PatchSerializer.serialize`][rdflib.plugins.serializers.patch.PatchSerializer.serialize].
+
+Example:
+    ```python
+    >>> from rdflib import Graph
+    >>> testin = '''
+    ... @base <http://example.com/>.
+    ... <MyData> {<X> <prop> 1.}
+    ... '''
+
+    >>> testout = '''
+    ... @base <http://example.com/>.
+    ... <MyData> {<X> <prop> 2.}
+    ... '''
+
+    >>> g_in = Graph().parse(data=testin, format='trig')
+
+    >>> g_out = Graph().parse(data=testout, format='trig')
+
+    >>> print(g_in.serialize(format="patch", target=g_out))
+    H id <uuid:8d55b570-230f-4b3d-aeaf-018412bf79b9> .
+    TX .
+    A <http://example.com/X> <http://example.com/prop> "2"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.com/MyData> .
+    D <http://example.com/X> <http://example.com/prop> "1"^^<http://www.w3.org/2001/XMLSchema#integer> <http://example.com/MyData> .
+    TC .
+    ```
+"""
+
 from __future__ import annotations
 
 import warnings
