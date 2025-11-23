@@ -1,3 +1,21 @@
+"""Implements nquads dataset serializer for RDFLib.
+
+Implements serialization for [N-Quads](https://www.w3.org/TR/n-quads/),
+a line-based, plain text format for encoding
+[RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
+
+Additional `args` supported by [`Graph.serialize`][rdflib.graph.Graph.serialize]
+are described by
+[`NQuadsSerializer.serialize`][rdflib.plugins.serializers.nquads.NQuadsSerializer.serialize].
+
+Example N-Quads document from [w3.org](https://www.w3.org/TR/n-quads/#sec-intro):
+    ```nquads
+    <http://one.example/subject1> <http://one.example/predicate1> <http://one.example/object1> <http://example.org/graph3> . # comments here
+    # or on a line by themselves
+    _:subject1 <http://an.example/predicate1> "object1" <http://example.org/graph1> .
+    _:subject2 <http://an.example/predicate2> "object2" <http://example.org/graph5> .
+    ```
+"""
 from __future__ import annotations
 
 import warnings
@@ -30,6 +48,14 @@ class NQuadsSerializer(Serializer):
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        """Serialize data from connected store as N-Quads and print it to stream.
+
+        Args:
+            stream: Print data to this stream.
+            base: Base will be ignored in N-Quads.
+            encoding: Encoding used for stream.
+            kwargs: Ignore the rest of the arguments.
+        """
         if base is not None:
             warnings.warn("NQuadsSerializer does not support base.")
         if encoding is not None and encoding.lower() != self.encoding.lower():
