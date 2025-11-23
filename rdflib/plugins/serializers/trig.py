@@ -1,6 +1,24 @@
-"""
-Trig RDF graph serializer for RDFLib.
-See <http://www.w3.org/TR/trig/> for syntax specification.
+"""Trig RDF graph serializer for RDFLib.
+
+Implements serialization for [Trig version 1.1](https://www.w3.org/TR/trig/),
+which is an extension for Turtle format.
+A TriG document allows writing down an RDF Dataset in a compact textual form.
+
+Additional `args` supported by [`Graph.serialize`][rdflib.graph.Graph.serialize]
+are described by
+[`TrigSerializer.serialize`][rdflib.plugins.serializers.trig.TrigSerializer.serialize].
+Example trig document from [w3.org](https://www.w3.org/TR/trig/#sec-graph-statements):
+    ```trig
+    @prefix ex: <http://www.example.org/vocabulary#> .
+    @prefix : <http://www.example.org/exampleDocument#> .
+
+    :G1 { :Monica a ex:Person ;
+                  ex:name "Monica Murphy" ;
+                  ex:homepage <http://www.monicamurphy.org> ;
+                  ex:email <mailto:monica@monicamurphy.org> ;
+                  ex:hasSkill ex:Management ,
+                              ex:Programming . }
+    ```
 """
 
 from __future__ import annotations
@@ -71,6 +89,18 @@ class TrigSerializer(TurtleSerializer):
         spacious: Optional[bool] = None,
         **kwargs: Any,
     ) -> None:
+        """Serialize data from connected store as trig and print it to stream.
+
+        Conforms to trig version 1.1
+
+        Args:
+            stream: Print data to this stream.
+            base: Base used in turtle document. Used for relative IRIs.
+                If `None` defaults to [base of store][rdflib.graph.Graph.base].
+            encoding: Encoding used for stream.
+            spacious: Add more new lines for more readable output.
+            kwargs: Ignore the rest of the arguments.
+        """
         self.reset()
         self.stream = stream
         # if base is given here, use that, if not and a base is set for the graph use that
